@@ -26,9 +26,21 @@ jQuery(function ($) {
         `;
     }
 
+    function reindexRows() {
+        tableBody.find('tr').each(function (rowIndex) {
+            $(this).find('input').each(function () {
+                const name = $(this).attr('name');
+                if (!name) return;
+                const updated = name.replace(/languages\]\[(\d+)\]/, `languages][${rowIndex}]`);
+                $(this).attr('name', updated);
+            });
+        });
+    }
+
     addButton.on('click', function () {
         const index = getNextIndex();
         tableBody.append(createRow(index));
+        reindexRows();
     });
 
     tableBody.on('click', '.lsls-remove-row', function () {
@@ -38,5 +50,6 @@ jQuery(function ($) {
             return;
         }
         $(this).closest('tr').remove();
+        reindexRows();
     });
 });

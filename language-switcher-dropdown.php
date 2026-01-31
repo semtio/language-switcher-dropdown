@@ -19,6 +19,7 @@ final class LSLS_Language_Switcher_Dropdown {
         add_action('admin_init', [__CLASS__, 'register_settings']);
         add_action('admin_enqueue_scripts', [__CLASS__, 'enqueue_admin_assets']);
         add_action('wp_enqueue_scripts', [__CLASS__, 'enqueue_frontend_assets']);
+        add_action('wp_enqueue_scripts', [__CLASS__, 'enqueue_custom_css'], 99);
     }
 
     public static function default_options(): array {
@@ -50,6 +51,7 @@ final class LSLS_Language_Switcher_Dropdown {
             'mobile_offset'    => 16,
             'breakpoint'       => 768,
             'enable_hover'     => true,
+            'custom_css'       => '',
         ];
     }
 
@@ -59,7 +61,16 @@ final class LSLS_Language_Switcher_Dropdown {
         if (!is_array($options)) {
             $options = [];
         }
-        return array_replace_recursive($defaults, $options);
+        $languages = $defaults['languages'];
+        if (isset($options['languages']) && is_array($options['languages'])) {
+            $languages = array_values($options['languages']);
+        }
+
+        unset($options['languages']);
+        $merged = array_replace_recursive($defaults, $options);
+        $merged['languages'] = $languages;
+
+        return $merged;
     }
 
     public static function register_admin_menu(): void {
@@ -145,6 +156,18 @@ final class LSLS_Language_Switcher_Dropdown {
         );
     }
 
+    public static function enqueue_custom_css(): void {
+        $options = self::get_options();
+        if (empty($options['languages']) || !is_array($options['languages'])) {
+            return;
+        }
+
+        if (!empty($options['custom_css'])) {
+            wp_enqueue_style('lsls-custom', false, ['lsls-frontend'], '1.0.0');
+            wp_add_inline_style('lsls-custom', $options['custom_css']);
+        }
+    }
+
     public static function sanitize_options($input): array {
         $defaults = self::default_options();
         $output = $defaults;
@@ -173,11 +196,7 @@ final class LSLS_Language_Switcher_Dropdown {
             }
         }
 
-        if (!empty($languages)) {
-            $output['languages'] = $languages;
-        } else {
-            $output['languages'] = [];
-        }
+        $output['languages'] = !empty($languages) ? array_values($languages) : [];
 
         $output['desktop_selector'] = sanitize_text_field($input['desktop_selector'] ?? $defaults['desktop_selector']);
         $output['fallback_to_body'] = !empty($input['fallback_to_body']);
@@ -192,6 +211,12 @@ final class LSLS_Language_Switcher_Dropdown {
 
         $offset = isset($input['mobile_offset']) ? (int) $input['mobile_offset'] : (int) $defaults['mobile_offset'];
         $output['mobile_offset'] = max(0, min(200, $offset));
+
+        if (isset($input['custom_css'])) {
+            $output['custom_css'] = wp_strip_all_tags($input['custom_css']);
+        } else {
+            $output['custom_css'] = '';
+        }
 
         $breakpoint = isset($input['breakpoint']) ? (int) $input['breakpoint'] : (int) $defaults['breakpoint'];
         $output['breakpoint'] = max(320, min(1920, $breakpoint));
@@ -287,6 +312,13 @@ final class LSLS_Language_Switcher_Dropdown {
                         <td>
                             <input type="number" id="lsls-mobile-offset" name="<?php echo esc_attr(self::OPTION_KEY); ?>[mobile_offset]" value="<?php echo esc_attr((string) ($options['mobile_offset'] ?? 16)); ?>" class="small-text" min="0" max="200" />
                             <p class="description"><?php echo esc_html__('Расстояние от выбранного угла в пикселях.', 'language-switcher-dropdown'); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="lsls-custom-css"><?php echo esc_html__('Пользовательские CSS', 'language-switcher-dropdown'); ?></label></th>
+                        <td>
+                            <textarea id="lsls-custom-css" name="<?php echo esc_attr(self::OPTION_KEY); ?>[custom_css]" rows="8" class="large-text code"><?php echo esc_textarea($options['custom_css'] ?? ''); ?></textarea>
+                            <p class="description"><?php echo esc_html__('Дополнительные стили для переопределения внешнего вида. Пример: .lsls-btn { background: #000; }', 'language-switcher-dropdown'); ?></p>
                         </td>
                     </tr>
                     <tr>

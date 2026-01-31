@@ -60,7 +60,12 @@
     display: block;
 }
 
-.lsls-menu a {
+.lsls-menu a,
+.lsls-menu a:visited {
+    color: #fff;
+}
+
+.lsls-menu a:hover {
     color: #fff;
 }
 
@@ -71,13 +76,12 @@
     padding: 10px 10px;
     border-radius: 12px;
     text-decoration: none;
-    color: #fff;
     line-height: 1;
     transition: background 0.2s ease;
 }
 
 .lsls-item:hover,
-.lsls-item.lsls-active {
+.lsls-active {
     background: rgba(255, 255, 255, 0.15);
 }
 
