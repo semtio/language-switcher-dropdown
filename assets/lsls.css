@@ -1,0 +1,112 @@
+/* Language Switcher Dropdown styles (lsls-) */
+#ls-lang-switcher {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.lsls-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+}
+
+.lsls-btn:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.35);
+    outline-offset: 2px;
+}
+
+.lsls-flag {
+    width: 22px;
+    height: 16px;
+    border-radius: 3px;
+    object-fit: cover;
+    display: block;
+}
+
+.lsls-code {
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+
+.lsls-caret {
+    margin-left: 4px;
+    opacity: 0.7;
+    font-size: 12px;
+}
+
+.lsls-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    min-width: 220px;
+    padding: 10px;
+    border-radius: 14px;
+    background: #0c0b1e;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    display: none;
+    z-index: 99999;
+}
+
+.lsls-open .lsls-menu {
+    display: block;
+}
+
+.lsls-menu a {
+    color: #fff;
+}
+
+.lsls-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 10px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #fff;
+    line-height: 1;
+    transition: background 0.2s ease;
+}
+
+.lsls-item:hover,
+.lsls-item.lsls-active {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.lsls-name {
+    opacity: 0.9;
+}
+
+.lsls-spacer {
+    flex: 1;
+}
+
+.lsls-root.lsls-bottom-left {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 100000;
+}
+
+.lsls-root.lsls-bottom-left .lsls-menu {
+    left: 0;
+    right: auto;
+    bottom: calc(100% + 10px);
+    top: auto;
+}
+
+@media (max-width: 768px) {
+    #ls-lang-switcher {
+        display: inline-block !important;
+        visibility: visible !important;
+        background: rgb(30, 2, 71);
+    }
+}

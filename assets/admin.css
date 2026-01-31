@@ -1,0 +1,8 @@
+.lsls-table input.regular-text {
+    width: 100%;
+}
+
+.lsls-table th,
+.lsls-table td {
+    vertical-align: middle;
+}
