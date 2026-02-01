@@ -3,7 +3,7 @@
  * Plugin Name: Language Switcher Dropdown
  * Description: Dropdown language switcher with flags and links, configurable from the admin panel.
  * Version: 1.0.0
- * Author: Your Name
+ * Author: 7on
  * Text Domain: language-switcher-dropdown
  */
 
